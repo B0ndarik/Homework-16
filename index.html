@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homework#16</title>
+  </head>
+  <body>
+    <script>
+      //Задача 1. Створити клас TDate для роботи із датами у форматі “день.місяць.рік”. Дата представляється структурою із трьома полями. Реалізувати методи збільшення/зменшення дати на певну кількість днів, місяців чи років. Введення та виведення дати реалізувати за допомогою методу  toString.
+      Date.prototype.getDaysInMonth = function () {
+        return new Date(this.getFullYear(), this.getMonth(), 0).getDate();
+      };
+
+      class Tdate {
+        constructor(initDay, initMonth, initYear) {
+          this.day = initDay;
+          this.month = initMonth;
+          this.year = initYear;
+        }
+        dayIncrease(val) {
+          let daysInc = this.day + val;
+          let daysInMonth = new Date(this.year, this.month, 0).getDate();
+          while (daysInc > daysInMonth) {
+            daysInc -= daysInMonth;
+            this.monthIncrease(1);
+            daysInMonth = new Date(this.year, this.month, 0).getDate();
+          }
+          this.day = daysInc;
+        }
+        dayDecrease(val) {
+          let daysDec = this.day - val;
+          if (daysDec > 0) this.day = daysDec;
+          else {
+            while (daysDec < 1) {
+              let daysInMonth = new Date(
+                this.year,
+                this.month - 1,
+                0
+              ).getDate();
+              daysDec += daysInMonth;
+              this.monthDecrease(1);
+            }
+            this.day = daysDec;
+          }
+        }
+        monthIncrease(val) {
+          this.month += val;
+          this.yearIncrease(Math.floor(this.month / 12));
+          this.month = ((this.month - 1) % 12) + 1;
+        }
+        monthDecrease(val) {
+          let years_ = 0;
+          this.month -= val;
+          while (this.month < 1) {
+            this.month += 12;
+            years_++;
+          }
+          this.yearDecrease(years_);
+        }
+        yearIncrease(val) {
+          this.year += val;
+        }
+        yearDecrease(val) {
+          this.year -= val;
+        }
+        toString() {
+          return `${this.day}.${this.month}.${this.year}<br>`;
+        }
+      }
+      let time = new Tdate(5, 2, 2023);
+      console.log(time);
+
+      time.monthDecrease(2);
+
+      document.write(time);
+
+      //Задача 2. Створити клас TMoney для роботи з грошовими сумами. Сума повинна зберігатися у вигляді доларового еквіваленту. Реалізувати методи додавання/вилучення грошової маси, вказуючи необхідну суму у гривнях, та визначення курсу долара, при якому сума у гривнях збільшиться на 100. Курс долара зберігати в окремому полі.
+
+      class Tmoney {
+        #sumDol = 0;
+        constructor(initialSumHrn, exchangeRate) {
+          this.exchangeRate = exchangeRate;
+          this.Addmoney = initialSumHrn;
+        }
+        get SumDol() {
+          return this.#sumDol;
+        }
+        set Addmoney(hrn) {
+          if (!Number.isFinite(hrn) || hrn <= 0)
+            throw new Error("Incorrect input data");
+          this.#sumDol += hrn / this.exchangeRate;
+        }
+        set withdrawMoney(hrn) {
+          if (
+            !Number.isFinite(hrn) ||
+            this.#sumDol - hrn / this.exchangeRate <= 0
+          )
+            throw new Error("Incorrect input data");
+          this.#sumDol -= hrn / exchangeRate;
+        }
+        increaseOn_100() {
+          return (this.#sumDol * this.exchangeRate + 100) / this.#sumDol;
+        }
+        toString() {
+          return `Balance-${this.#sumDol}`;
+        }
+      }
+
+      let account = new Tmoney(50000, 40);
+      //document.write(account);
+
+      //Задача 3. Об’єкт “Фірма” (використати члени-класи)
+      class Service {
+        #serviceName;
+        #price;
+        #operatingTerm;
+        constructor(name, price, term) {
+          this.ServiceName = name;
+          this.Price = price;
+          this.OperatingTerm = term;
+        }
+        get ServiceName() {
+          return this.#serviceName;
+        }
+        get Price() {
+          return this.#price;
+        }
+        get OperatingTerm() {
+          return this.#operatingTerm;
+        }
+        set ServiceName(name) {
+          if (name.length === 0) throw new Error("Name can\`t be empty");
+          this.#serviceName = name;
+        }
+        set Price(price) {
+          if (price <= 0) throw new Error("Price is not correct");
+          this.#price = price;
+        }
+        set OperatingTerm(term) {
+          if (term <= 0) throw new Error("Price is not correct");
+          this.#operatingTerm = term;
+        }
+      }
+
+      class Branch {
+        #country;
+        #city;
+        #street;
+        #house;
+        constructor(country, city, street, house) {
+          this.Country = country;
+          this.City = city;
+          this.Street = street;
+          this.House = house;
+        }
+        get Country() {
+          return this.#country;
+        }
+        get City() {
+          return this.#city;
+        }
+        get Street() {
+          return this.#street;
+        }
+        get House() {
+          return this.#house;
+        }
+        set Country(country) {
+          if (country.length === 0) throw new Error("Country can\`t be empty");
+          this.#country = country;
+        }
+        set City(city) {
+          if (city.length === 0) throw new Error("City can\`t be empty");
+          this.#city = city;
+        }
+        set Street(street) {
+          if (street.length === 0) throw new Error("Street can\`t be empty");
+        }
+        set House(house) {
+          if (house <= 0) throw new Error("House is not correct");
+        }
+      }
+
+      let branches = [
+        new Branch("USA", "Los Angeles", "Gateway blvd", 10),
+        new Branch("USA", "Los Angeles", "Pico blvd", 20),
+        new Branch("USA", "Long Beach", "Sepulveda blvd", 30),
+      ];
+
+      let services = [
+        new Service("Construction", 5000, 10),
+        new Service("Electric Wiring", 10000, 20),
+      ];
+
+      class Company {
+        #companyName;
+        #establishedDate;
+        #services;
+        #branches;
+        constructor(name, date, services, branches) {
+          this.CompanyName = name;
+          this.Established = date;
+          this.Services = services;
+          this.Branches = branches;
+        }
+        get CompanyName() {
+          return this.#companyName;
+        }
+        get Established() {
+          return this.#establishedDate;
+        }
+        get Services() {
+          return this.#services;
+        }
+        get Branches() {
+          return this.#branches;
+        }
+        set CompanyName(name) {
+          if (name.length === 0) throw new Error("Name can\`t be empty");
+          this.#companyName = name;
+        }
+        set Established(date) {
+          if (date <= 0) throw new Error("Year is not correct");
+          this.#establishedDate = date;
+        }
+
+        set Services(services) {
+          this.#services = services;
+        }
+        set Branches(branches) {
+          this.#branches = branches;
+        }
+        get yearsInBusiness() {
+          let currentDate = new Date();
+          let currentMonth = currentDate.getMonth();
+          let currentYear = currentDate.getFullYear();
+          if (this.#establishedDate.month <= currentMonth)
+            return currentYear - this.#establishedDate.year;
+          return currentYear - this.#establishedDate.year - 1;
+        }
+
+        getBranchesInCity(city) {
+          return this.Branches.filter((branch) => branch.City === city);
+        }
+        getAffordableService(price, time) {
+          return this.Services.filter(
+            (service) => service.Price < price && service.OperatingTerm < time
+          );
+        }
+        toString() {
+          return `${this.CompanyName} <br> Established date-${this.Established.year}.${this.Established.month} `;
+        }
+      }
+
+      let company = new Company(
+        "Bond Brothers",
+        { year: 2010, month: 6 },
+        services,
+        branches
+      );
+
+      console.log(company);
+      console.log(branches);
+      console.log(services);
+      console.log(company.getBranchesInCity("Los Angeles"));
+      console.log(company.getAffordableService(6000, 12));
+      //document.write(company);
+
+      //Задача 4. Створити клас TBankomat, який моделює роботу банкомата. Клас повинен містити поля для зберігання кількості купюр кожного із номіналів від 5 до 200 гривень. Реалізувати методи знаходження максимальної та мінімальної сум, які може видати банкомат, та метод зняття деякої суми.
+
+      class TBankomat {
+        #atmContent = {
+          5: 0,
+          10: 0,
+          20: 0,
+          50: 0,
+          100: 0,
+          200: 0,
+        };
+        constructor(bill_5, bill_10, bill_20, bill_50, bill_100, bill_200) {
+          this.Bill_5 = bill_5;
+          this.Bill_10 = bill_10;
+          this.Bill_20 = bill_20;
+          this.Bill_50 = bill_50;
+          this.Bill_100 = bill_100;
+          this.Bill_200 = bill_200;
+        }
+        set Bill_5(bill_5) {
+          if (!Number.isFinite(bill_5) || bill_5 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[5] = bill_5;
+        }
+        set Bill_10(bill_10) {
+          if (!Number.isFinite(bill_10) || bill_10 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[10] = bill_10;
+        }
+        set Bill_20(bill_20) {
+          if (!Number.isFinite(bill_20) || bill_20 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[20] = bill_20;
+        }
+        set Bill_50(bill_50) {
+          if (!Number.isFinite(bill_50) || bill_50 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[50] = bill_50;
+        }
+        set Bill_100(bill_100) {
+          if (!Number.isFinite(bill_100) || bill_100 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[100] = bill_100;
+        }
+        set Bill_200(bill_200) {
+          if (!Number.isFinite(bill_200) || bill_200 < 0)
+            throw new Error("Incorrect input data");
+          this.#atmContent[200] = bill_200;
+        }
+        get MaxWithdraw() {
+          return Object.keys(this.#atmContent).reduce(
+            (prevSum, bill) => prevSum + bill * this.#atmContent[bill],
+            0
+          );
+        }
+        get MinWithdraw() {
+          return Object.keys(this.#atmContent).find(
+            (bill) => this.#atmContent[bill] > 0
+          );
+        }
+        withdraw(sum) {
+          if (sum < this.MinWithdraw) {
+            throw new Error(`The sum is less than minimum`);
+          }
+          if (sum > this.MaxWithdraw) {
+            throw new Error(`The sum is more than maximum`);
+          }
+          let bills = Object.keys(this.#atmContent).reverse();
+          let withdraw = {};
+
+          for (let bill of bills) {
+            if (sum >= bill) {
+              withdraw[bill] = Math.floor(sum / bill);
+              sum = sum % (withdraw[bill] * bill);
+            }
+          }
+          return withdraw;
+        }
+      }
+      let bankomat = new TBankomat(2, 3, 4, 5, 6, 7);
+      console.log(bankomat);
+      console.log(bankomat.MinWithdraw);
+      console.log(bankomat.MaxWithdraw);
+      console.log(bankomat.withdraw(1350));
+    </script>
+  </body>
+</html>
